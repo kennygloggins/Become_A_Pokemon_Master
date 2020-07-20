@@ -95,7 +95,9 @@ class Trainer:
         self.active_pok.attack(Trainer.active_pok, dmg)
 
     def switch_pok(self, switch_to_pok):
+        last = self.active_pok.name
         self.active_pok = self.lst_pokemon[switch_to_pok]
+        print('{} switched out {} for {}!'.format(self.name, last, self.active_pok.name))
 
 
 charmander = Pokemon('Charmander', 12, 'fire', 32, 32, False)
@@ -121,3 +123,4 @@ ash = Trainer([charmander, charmander2, squirtle, squirtle2, bulbasaur, bulbasau
 brock = Trainer([oddish, oddish2, growlithe, growlithe2, tentacool, tentacool2], 'Brock', 5, oddish)
 
 ash.attack(brock, 4)
+brock.switch_pok(4)
