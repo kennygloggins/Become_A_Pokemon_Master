@@ -4,10 +4,14 @@
 # Project: Become_A_Pokemon_Master
 
 
+# POKE_ID = 0
+
 class Pokemon:
 
     element = {'strong': {'water': 'fire', 'fire': 'grass', 'grass': 'water'},
                'weak': {'water': 'grass', 'fire':'water','grass': 'fire'}}
+
+    # POKE_ID += 1
 
     def __init__(self, name, level, ptype, max_hp, c_hp, knocked):
         self.name = name
@@ -16,9 +20,13 @@ class Pokemon:
         self.max_hp = max_hp
         self.c_hp = c_hp
         self.knocked = knocked
+        # self.poken_pokei = {self.name: POKE_ID}
 
     def lose_heatlh(self, minus_hp):
-        self.c_hp -= minus_hp
+        if self.c_hp - minus_hp < 0:
+            self.c_hp = 0
+        else:
+            self.c_hp -= minus_hp
         return '{} now has {} health'.format(self.name, self.c_hp)
 
     def gain_health(self, plus_hp):
@@ -26,7 +34,7 @@ class Pokemon:
         return '{} now has {} health'.format(self.name, self.c_hp)
 
     def knock_out(self):
-        if self.c_hp <= 0:
+        if self.c_hp == 0:
             self.knocked = True
         else:
             self.knocked = False
@@ -36,23 +44,23 @@ class Pokemon:
     def revive(self): # todo finish revive method
         pass
 
-    def attack(self, pokemon, dmg):
+    def attack(self, Pokemon, dmg):
         norm = True
-        for ele in element['strong']:
-            if ele.keys() == self.ptype and ele.values() == pokemon:
+        for ele in self.element['strong']:
+            if ele == self.ptype and  self.element['strong'][ele] == Pokemon.ptype:
                 crit = dmg * 2
-                Pokemon.lose_heatlh(pokemon, crit)
+                Pokemon.lose_heatlh(crit)
                 norm = False
-                return 'Critical STRIKE! {} took {} damage'.format(pokemon, crit)
-        for ele in element['weak']:
-            if ele.keys() == self.ptype and ele.values() == pokemon:
+                return 'Critical STRIKE! {} took {} damage'.format(Pokemon.name, crit)
+        for ele in self.element['weak']:
+            if ele == self.ptype and self.element['weak'][ele] == Pokemon.ptype:
                 wiff = dmg / 2
-                Pokemon.lose_heatlh(pokemon, wiff)
+                Pokemon.lose_heatlh(wiff)
                 norm = False
-                return 'Was not very effective. {} took {} damage'.format(pokemon, wiff)
+                return 'Was not very effective. {} took {} damage'.format(Pokemon.name, wiff)
         if norm == True:
-            Pokemon.lose_heatlh(pokemon, dmg)
-            return '{} took {} damage'.format(pokemon, dmg)
+            Pokemon.lose_heatlh(Pokemon, dmg)
+            return '{} took {} damage'.format(Pokemon.name, dmg)
 
 
 class Trainer:
@@ -68,4 +76,8 @@ class Trainer:
     def attack(self, trainer): # todo write method
         pass
 
-    def
+
+charmander = Pokemon('Charmander', 12, 'fire', 32, 32, False)
+squirtle = Pokemon('Squirtle', 12, 'water', 32, 32, False)
+
+print(squirtle.attack(charmander, 4))
