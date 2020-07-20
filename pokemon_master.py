@@ -76,8 +76,8 @@ class Pokemon:
             return '{} took {} damage'.format(Pokemon.name, dmg), Pokemon.lose_heatlh(dmg)
 
 
-
 class Trainer:
+
     def __init__(self, lst_pokemon, name, n_potions, active_pok):
         self.lst_pokemon = lst_pokemon
         self.name = name
@@ -91,17 +91,33 @@ class Trainer:
         else:
             print('You have no potions!')
 
-
     def attack(self, Trainer, dmg):
         self.active_pok.attack(Trainer.active_pok, dmg)
+
+    def switch_pok(self, switch_to_pok):
+        self.active_pok = self.lst_pokemon[switch_to_pok]
 
 
 charmander = Pokemon('Charmander', 12, 'fire', 32, 32, False)
 squirtle = Pokemon('Squirtle', 12, 'water', 32, 32, False)
+squirtle2 = Pokemon('Squirtle', 12, 'water', 32, 32, False)
 charmander2 = Pokemon('Charmander', 12, 'fire', 32, 32, False)
+bulbasaur = Pokemon('Bulbasaur', 12, 'grass', 32, 32, False)
+bulbasaur2 = Pokemon('Bulbasaur', 12, 'grass', 32, 32, False)
+oddish = Pokemon('Oddish', 12, 'grass', 32, 32, False)
+oddish2 = Pokemon('Oddish', 12, 'grass', 32, 32, False)
+growlithe = Pokemon('Growlithe', 12, 'fire', 32, 32, False)
+growlithe2 = Pokemon('Growlithe', 12, 'fire', 32, 32, False)
+tentacool = Pokemon('Tentacool', 12, 'water', 32, 32, False)
+tentacool2 = Pokemon('Tentacool', 12, 'water', 32, 32, False)
 
-squirtle.attack(charmander2, 4)
-squirtle.attack(charmander2, 4)
-squirtle.attack(charmander2, 4)
-squirtle.attack(charmander2, 4)
+# squirtle.attack(charmander2, 4)
+# squirtle.attack(charmander2, 4)
+# squirtle.attack(charmander2, 4)
+# squirtle.attack(charmander2, 4)
 # print(charmander2.c_hp)
+
+ash = Trainer([charmander, charmander2, squirtle, squirtle2, bulbasaur, bulbasaur2], 'Ash', 4, charmander)
+brock = Trainer([oddish, oddish2, growlithe, growlithe2, tentacool, tentacool2], 'Brock', 5, oddish)
+
+ash.attack(brock, 4)
