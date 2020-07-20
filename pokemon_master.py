@@ -37,16 +37,16 @@ class Pokemon:
             return self.knock_out()
         else:
             self.c_hp -= minus_hp
-            return'{} now has {} health'.format(self.name, self.c_hp)
+            print('{} now has {} health'.format(self.name, self.c_hp))
 
     def gain_health(self, plus_hp):
         self.c_hp += plus_hp
-        return '{} now has {} health'.format(self.name, self.c_hp)
+        print('{} now has {} health'.format(self.name, self.c_hp))
 
     def knock_out(self):
         if self.c_hp == 0:
             self.knocked = True
-            return '{} has been knocked out'.format(self.name)
+            print('{} has been knocked out'.format(self.name))
         else:
             self.knocked = False
 
@@ -63,12 +63,14 @@ class Pokemon:
             if ele == self.ptype and  self.element['strong'][ele] == Pokemon.ptype:
                 crit = dmg * 2
                 norm = False
-                return 'Critical STRIKE! {} took {} damage'.format(Pokemon.name, crit), Pokemon.lose_heatlh(crit)
+                print('Critical STRIKE! {} took {} damage'.format(Pokemon.name, crit))
+                Pokemon.lose_heatlh(crit)
         for ele in self.element['weak']:
             if ele == self.ptype and self.element['weak'][ele] == Pokemon.ptype:
                 wiff = dmg / 2
                 norm = False
-                return 'Was not very effective. {} took {} damage'.format(Pokemon.name, wiff), Pokemon.lose_heatlh(wiff)
+                print('Was not very effective. {} took {} damage'.format(Pokemon.name, wiff))
+                Pokemon.lose_heatlh(wiff)
 
         if norm:
             return '{} took {} damage'.format(Pokemon.name, dmg), Pokemon.lose_heatlh(dmg)
@@ -87,7 +89,7 @@ class Trainer:
             Pokemon.gain_health(10)
             self.n_potions -= 1
         else:
-            return 'You have no potions!'
+            print('You have no potions!')
 
 
     def attack(self, Trainer, dmg):
@@ -98,8 +100,8 @@ charmander = Pokemon('Charmander', 12, 'fire', 32, 32, False)
 squirtle = Pokemon('Squirtle', 12, 'water', 32, 32, False)
 charmander2 = Pokemon('Charmander', 12, 'fire', 32, 32, False)
 
-print(squirtle.attack(charmander2, 4))
-print(squirtle.attack(charmander2, 4))
-print(squirtle.attack(charmander2, 4))
-print(squirtle.attack(charmander2, 4))
+squirtle.attack(charmander2, 4)
+squirtle.attack(charmander2, 4)
+squirtle.attack(charmander2, 4)
+squirtle.attack(charmander2, 4)
 # print(charmander2.c_hp)
