@@ -40,8 +40,12 @@ class Pokemon:
             print('{} now has {} health'.format(self.name, self.c_hp))
 
     def gain_health(self, plus_hp):
-        self.c_hp += plus_hp
-        print('{} now has {} health'.format(self.name, self.c_hp))
+        if self.c_hp + plus_hp < self.max_hp:
+            self.c_hp += plus_hp
+            print('{} now has {} health'.format(self.name, self.c_hp))
+        elif self.c_hp + plus_hp >= self.max_hp:
+            self.c_hp = self.max_hp
+            print('{} is now at full health!'.format(self.name))
 
     def knock_out(self):
         if self.c_hp == 0:
@@ -58,31 +62,34 @@ class Pokemon:
             return 'Can\'t do this yet. {} is not knocked.'.format(self.name)
 
     def attack(self, Pokemon, dmg):
-        norm = True
-        for ele in self.element['strong']:
-            if ele == self.ptype and  self.element['strong'][ele] == Pokemon.ptype:
-                crit = dmg * 2
-                norm = False
-                print('Critical STRIKE! {} took {} damage'.format(Pokemon.name, crit))
-                Pokemon.lose_heatlh(crit)
-        for ele in self.element['weak']:
-            if ele == self.ptype and self.element['weak'][ele] == Pokemon.ptype:
-                wiff = dmg / 2
-                norm = False
-                print('Was not very effective. {} took {} damage'.format(Pokemon.name, wiff))
-                Pokemon.lose_heatlh(wiff)
+        if not self.knocked:
+            norm = True
+            for ele in self.element['strong']:
+                if ele == self.ptype and  self.element['strong'][ele] == Pokemon.ptype:
+                    crit = dmg * 2
+                    norm = False
+                    print('Critical STRIKE! {} took {} damage'.format(Pokemon.name, crit))
+                    Pokemon.lose_heatlh(crit)
+            for ele in self.element['weak']:
+                if ele == self.ptype and self.element['weak'][ele] == Pokemon.ptype:
+                    wiff = dmg / 2
+                    norm = False
+                    print('Was not very effective. {} took {} damage'.format(Pokemon.name, wiff))
+                    Pokemon.lose_heatlh(wiff)
 
-        if norm:
-            return '{} took {} damage'.format(Pokemon.name, dmg), Pokemon.lose_heatlh(dmg)
-
+            if norm:
+                return '{} took {} damage'.format(Pokemon.name, dmg), Pokemon.lose_heatlh(dmg)
+        else:
+            print('Poke = ded, please choose another to do that thing you asked')
 
 class Trainer:
 
-    def __init__(self, lst_pokemon, name, n_potions, active_pok):
+    def __init__(self, lst_pokemon, name, n_potions, active_pok, n_revive):
         self.lst_pokemon = lst_pokemon
         self.name = name
         self.n_potions = n_potions
         self.active_pok = active_pok
+        self.n_revive = n_revive
 
     def use_potion(self, Pokemon):
         if self.n_potions > 0:
@@ -91,13 +98,24 @@ class Trainer:
         else:
             print('You have no potions!')
 
+    def use_revive(self, Pokemon):
+        if self.n_revive > 0 and not Pokemon.knocked:
+            Pokemon.revive()
+            self.n_revive -= 1
+        else:
+            print('You have no revives!')
+
     def attack(self, Trainer, dmg):
         self.active_pok.attack(Trainer.active_pok, dmg)
 
     def switch_pok(self, switch_to_pok):
-        last = self.active_pok.name
-        self.active_pok = self.lst_pokemon[switch_to_pok]
-        print('{} switched out {} for {}!'.format(self.name, last, self.active_pok.name))
+        if self.lst_pokemon[switch_to_pok].knocked:
+            print('{} is taking a nap, please choose another'.format(self.lst_pokemon[switch_to_pok]))
+            # todo prompt user to pick another pokemon
+        else:
+            last = self.active_pok.name
+            self.active_pok = self.lst_pokemon[switch_to_pok]
+            print('{} switched out {} for {}!'.format(self.name, last, self.active_pok.name))
 
 
 charmander = Pokemon('Charmander', 12, 'fire', 32, 32, False)
@@ -119,8 +137,9 @@ tentacool2 = Pokemon('Tentacool', 12, 'water', 32, 32, False)
 # squirtle.attack(charmander2, 4)
 # print(charmander2.c_hp)
 
-ash = Trainer([charmander, charmander2, squirtle, squirtle2, bulbasaur, bulbasaur2], 'Ash', 4, charmander)
-brock = Trainer([oddish, oddish2, growlithe, growlithe2, tentacool, tentacool2], 'Brock', 5, oddish)
+ash = Trainer([charmander, charmander2, squirtle, squirtle2, bulbasaur, bulbasaur2], 'Ash', 4, charmander, 2)
+brock = Trainer([oddish, oddish2, growlithe, growlithe2, tentacool, tentacool2], 'Brock', 5, oddish, 3)
 
 ash.attack(brock, 4)
 brock.switch_pok(4)
+brock.use_potion(oddish)
